@@ -12,6 +12,7 @@ from multi_agent_research_lab.core.schemas import ResearchQuery
 from multi_agent_research_lab.core.state import ResearchState
 from multi_agent_research_lab.graph.workflow import MultiAgentWorkflow
 from multi_agent_research_lab.observability.logging import configure_logging
+from multi_agent_research_lab.services.llm_client import LLMClient
 
 app = typer.Typer(help="Multi-Agent Research Lab starter CLI")
 console = Console()
@@ -31,10 +32,12 @@ def baseline(
     _init()
     request = ResearchQuery(query=query)
     state = ResearchState(request=request)
-    state.final_answer = (
-        "Baseline skeleton response. TODO(student): replace this with a real single-agent "
-        "implementation and record latency/cost/quality metrics."
+    llm = LLMClient()
+    response = llm.complete(
+        system_prompt="You are a helpful research assistant. Provide a comprehensive answer to the user's query.",
+        user_prompt=query,
     )
+    state.final_answer = response.content
     console.print(Panel.fit(state.final_answer, title="Single-Agent Baseline"))
 
 

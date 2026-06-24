@@ -1,0 +1,6 @@
+# Chặn các file môi trường và thông tin nhạy cảm
+.env
+.env.*
+*.local
+secrets/
+*.key
